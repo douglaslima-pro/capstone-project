@@ -1,6 +1,6 @@
 ﻿using System.ComponentModel.DataAnnotations;
 
-namespace CapstoneProject.API.Models
+namespace CapstoneProject.Business.Models
 {
     public class RegisterModel
     {

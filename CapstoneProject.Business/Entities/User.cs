@@ -22,5 +22,6 @@ namespace CapstoneProject.Business.Entities
         [MaxLength(30)]
         [DataType(DataType.Password)]
         public string? PasswordHash { get; set; }
+        public string? Role { get; set; }
     }
 }

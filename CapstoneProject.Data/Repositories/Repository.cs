@@ -26,7 +26,7 @@ namespace CapstoneProject.Data.Repositories
         {
             try
             {
-                await _entity.AddAsync(entity);
+                _entity.Add(entity);
                 await _context.SaveChangesAsync();
                 return true;
             }
@@ -36,9 +36,18 @@ namespace CapstoneProject.Data.Repositories
             }
         }
 
-        public Task<bool> UpdateAsync(TEntity entity)
+        public async Task<bool> UpdateAsync(TEntity entity)
         {
-            throw new NotImplementedException();
+            try
+            {
+                _entity.Update(entity);
+                await _context.SaveChangesAsync();
+                return true;
+            }
+            catch
+            {
+                return false;
+            }
         }
 
         public async Task<bool> DeleteAsync(TEntity entity)

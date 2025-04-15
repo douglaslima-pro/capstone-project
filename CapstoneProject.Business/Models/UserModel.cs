@@ -1,4 +1,4 @@
-﻿namespace CapstoneProject.API.Models
+﻿namespace CapstoneProject.Business.Models
 {
     public class UserModel
     {
@@ -6,5 +6,6 @@
         public string? Name { get; set; }
         public string? Email { get; set; }
         public string? Username { get; set; }
+        public string? Role { get; set; }
     }
 }
