@@ -12,8 +12,7 @@
   </ItemGroup>
 
   <ItemGroup>
-    <Folder Include="Context\" />
-    <Folder Include="Repositories\" />
+    <ProjectReference Include="..\CapstoneProject.Business\CapstoneProject.Business.csproj" />
   </ItemGroup>
 
 </Project>
