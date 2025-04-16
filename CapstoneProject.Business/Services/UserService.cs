@@ -7,7 +7,7 @@ using CapstoneProject.Business.Entities;
 using CapstoneProject.Business.Exceptions;
 using CapstoneProject.Business.Interfaces.Repositories;
 using CapstoneProject.Business.Interfaces.Services;
-using CapstoneProject.Business.Models;
+using CapstoneProject.Business.Models.User;
 
 namespace CapstoneProject.Business.Services
 {
@@ -20,24 +20,7 @@ namespace CapstoneProject.Business.Services
             _userRepository = userRepository;
         }
 
-        public async Task<bool> CreateAsync(RegisterModel model)
-        {
-            var user = new User
-            {
-                Name = model.Name,
-                Email = model.Email,
-                Username = model.Username,
-                Role = "User",
-            };
-
-            var passwordHash = BCrypt.Net.BCrypt.HashPassword(model.Password);
-
-            user.PasswordHash = passwordHash;
-
-            return await _userRepository.CreateAsync(user);
-        }
-
-        public async Task<bool> UpdateAsync(int id, UserModel model)
+        public async Task<bool> UpdateAsync(int id, UserUpdateModel model)
         {
             var user = await _userRepository.GetByIdAsync(id);
 
@@ -46,10 +29,15 @@ namespace CapstoneProject.Business.Services
                 throw new NotFoundException("User does not exist!");
             }
 
-            user.Name = model.Name;
-            user.Email = model.Email;
-            user.Username = model.Username;
-            user.Role = model.Role;
+            user.Name = model.Name ?? user.Name;
+            user.Email = model.Email ?? user.Email;
+            user.Username = model.Username ?? user.Username;
+
+            if (model.Password != null)
+            {
+                var passwordHash = BCrypt.Net.BCrypt.HashPassword(model.Password);
+                user.PasswordHash = passwordHash;
+            }
 
             return await _userRepository.UpdateAsync(user);
         }

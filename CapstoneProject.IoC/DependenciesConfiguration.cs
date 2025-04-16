@@ -15,7 +15,7 @@ public static class DependenciesConfiguration
 
         // Services
         services.AddScoped<IUserService, UserService>();
-        services.AddScoped<IAuthenticationService, AuthenticationService>();
+        services.AddScoped<IAuthService, AuthService>();
 
         return services;
     }

@@ -1,6 +1,6 @@
 ﻿using System.ComponentModel.DataAnnotations;
 
-namespace CapstoneProject.Business.Models
+namespace CapstoneProject.Business.Models.Auth
 {
     public class LoginModel
     {

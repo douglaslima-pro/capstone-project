@@ -1,25 +1,22 @@
-﻿using System;
-using System.Collections.Generic;
-using System.IdentityModel.Tokens.Jwt;
-using System.Linq;
+﻿using System.IdentityModel.Tokens.Jwt;
 using System.Security.Claims;
 using System.Text;
-using System.Threading.Tasks;
+using CapstoneProject.Business.Entities;
 using CapstoneProject.Business.Exceptions;
 using CapstoneProject.Business.Interfaces.Repositories;
 using CapstoneProject.Business.Interfaces.Services;
-using CapstoneProject.Business.Models;
+using CapstoneProject.Business.Models.Auth;
 using Microsoft.Extensions.Configuration;
 using Microsoft.IdentityModel.Tokens;
 
 namespace CapstoneProject.Business.Services
 {
-    public class AuthenticationService : IAuthenticationService
+    public class AuthService : IAuthService
     {
         private readonly IConfiguration _configuration;
         private readonly IUserRepository _userRepository;
 
-        public AuthenticationService(
+        public AuthService(
             IConfiguration configuration,
             IUserRepository userRepository)
         {
@@ -27,7 +24,7 @@ namespace CapstoneProject.Business.Services
             _userRepository = userRepository;
         }
 
-        public async Task<string> Login(LoginModel model)
+        public async Task<string> LoginAsync(LoginModel model)
         {
             var user = await _userRepository.GetAsync(x => x.Email == model.Email);
 
@@ -42,7 +39,7 @@ namespace CapstoneProject.Business.Services
             }
 
             // Generates JWT token
-            var key = new SymmetricSecurityKey(Encoding.UTF8.GetBytes(_configuration["JwtSettings:SecreyKey"]));
+            var key = new SymmetricSecurityKey(Encoding.UTF8.GetBytes(_configuration["JwtSettings:SecretKey"]));
             var credentials = new SigningCredentials(key, SecurityAlgorithms.HmacSha256);
 
             var claims = new List<Claim>
@@ -65,6 +62,37 @@ namespace CapstoneProject.Business.Services
             var tokenHandler = new JwtSecurityTokenHandler();
 
             return tokenHandler.WriteToken(token);
+        }
+
+        public async Task<bool> RegisterAsync(RegisterModel model)
+        {
+            var user = new User
+            {
+                Name = model.Name,
+                Email = model.Email,
+                Username = model.Username,
+                Role = "User",
+            };
+
+            var passwordHash = BCrypt.Net.BCrypt.HashPassword(model.Password);
+
+            user.PasswordHash = passwordHash;
+
+            return await _userRepository.CreateAsync(user);
+        }
+
+        public async Task<bool> AssignRoleByIdAsync(int id, string role)
+        {
+            var user = await _userRepository.GetByIdAsync(id);
+
+            if (user == null)
+            {
+                throw new NotFoundException("User does not exist!");
+            }
+
+            user.Role = role;
+
+            return await _userRepository.UpdateAsync(user);
         }
     }
 }

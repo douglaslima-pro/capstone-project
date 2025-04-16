@@ -1,4 +1,4 @@
-﻿namespace CapstoneProject.Business.Models
+﻿namespace CapstoneProject.Business.Models.User
 {
     public class UserModel
     {

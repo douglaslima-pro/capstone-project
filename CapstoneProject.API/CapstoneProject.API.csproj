@@ -19,8 +19,4 @@
 		<ProjectReference Include="..\CapstoneProject.IoC\CapstoneProject.IoC.csproj" />
 	</ItemGroup>
 
-	<ItemGroup>
-	  <Folder Include="Controllers\" />
-	</ItemGroup>
-
 </Project>
